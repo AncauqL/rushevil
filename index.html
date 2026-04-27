@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>天使与恶魔</title>
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="game-stage" aria-label="天使与恶魔棋盘">
+        <canvas id="board" width="1200" height="900"></canvas>
+        <div class="board-tools" aria-label="棋盘工具">
+          <button id="zoomOut" class="icon-button" title="缩小" aria-label="缩小">−</button>
+          <button id="zoomIn" class="icon-button" title="放大" aria-label="放大">+</button>
+          <button id="centerAngel" class="tool-button" type="button">定位天使</button>
+        </div>
+      </section>
+
+      <aside class="side-panel">
+        <header class="brand">
+          <p class="eyebrow">5-15 分钟短局</p>
+          <h1>天使与恶魔</h1>
+        </header>
+
+        <section class="setup-panel" id="setupPanel">
+          <div class="setup-grid">
+            <label>
+              <span>天使力量 K</span>
+              <input id="powerInput" type="number" min="1" max="12" value="1" />
+            </label>
+            <label>
+              <span>逃脱距离</span>
+              <input id="escapeInput" type="number" min="4" max="50" value="22" />
+            </label>
+            <label>
+              <span>最大天使回合</span>
+              <input id="maxMovesInput" type="number" min="10" max="100" value="32" />
+            </label>
+            <label>
+              <span>棋盘半径</span>
+              <input id="boardRadiusInput" type="number" min="8" max="36" value="20" />
+            </label>
+            <label>
+              <span>恶魔每回合</span>
+              <input id="blocksPerTurnInput" type="number" min="1" max="6" value="2" />
+            </label>
+          </div>
+          <div class="setup-row">
+            <button id="startGame" type="button">本地开始</button>
+          </div>
+        </section>
+
+        <section class="online-panel">
+          <h2>联机</h2>
+          <div class="online-actions">
+            <button id="createRoom" type="button">创建房间</button>
+            <div class="join-row">
+              <input id="roomCodeInput" type="text" maxlength="5" placeholder="房间码" />
+              <button id="joinRoom" type="button">加入</button>
+            </div>
+          </div>
+          <div class="online-status">
+            <span id="onlineStatus">本地模式</span>
+            <strong id="roomCodeLabel">----</strong>
+          </div>
+        </section>
+
+        <section class="status-panel">
+          <div>
+            <span>当前回合</span>
+            <strong id="turnLabel">未开始</strong>
+          </div>
+          <div>
+            <span>力量 K</span>
+            <strong id="powerLabel">2</strong>
+          </div>
+          <div>
+            <span>路障</span>
+            <strong id="blockCount">0</strong>
+          </div>
+          <div>
+            <span>本回合封锁</span>
+            <strong id="blockQuota">0 / 2</strong>
+          </div>
+          <div>
+            <span>逃脱进度</span>
+            <strong id="escapeProgress">0 / 22</strong>
+          </div>
+          <div>
+            <span>天使回合</span>
+            <strong id="moveProgress">0 / 32</strong>
+          </div>
+        </section>
+
+        <section class="message-panel" id="messagePanel">
+          设置短局参数后开始。恶魔先放置路障，天使随后向外圈逃脱。
+        </section>
+
+        <section class="action-panel">
+          <button id="undoMove" type="button" disabled>悔棋</button>
+          <button id="resetGame" type="button">重开</button>
+        </section>
+
+        <section class="rules-panel">
+          <h2>规则</h2>
+          <ol>
+            <li>两名玩家分别扮演天使与恶魔。</li>
+            <li>恶魔每回合放置 2 个路障，不能放在天使所在格。</li>
+            <li>天使每回合可移动至多 K 步，八方向相邻都算一步，不能回到上一格。</li>
+            <li>天使移动途中可穿过路障，但终点必须为空。</li>
+            <li>天使到达逃脱线，或撑过最大天使回合，天使获胜。</li>
+            <li>天使无合法落点时恶魔获胜。</li>
+          </ol>
+        </section>
+      </aside>
+    </main>
+
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>
