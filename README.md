@@ -34,7 +34,7 @@ node server.mjs
 $env:HOST="0.0.0.0"; node server.mjs
 ```
 
-然后把你的电脑局域网 IP 发给朋友，例如 `http://192.168.1.23:8000`。如果朋友打不开，通常是 Windows 防火墙没有放行 Node.js，或两台设备不在同一个网络。
+然后把你的电脑局域网 IP 发给朋友，例如 `http://192.168.1.23:8000`。
 
 也可以发带房间码的链接：
 
@@ -55,63 +55,6 @@ node tests/api.test.mjs
 npm test
 ```
 
-## 部署到公网服务器
-
-不在同一个局域网时，需要把这个 Node 服务部署到一台有公网 IP 或域名的服务器上。最简单的是 VPS，例如腾讯云、阿里云、华为云、AWS Lightsail、Hetzner、DigitalOcean 等。
-
-### 方式一：直接在 VPS 上运行
-
-服务器需要安装 Node.js 20 或以上。
-
-1. 把项目上传到服务器，例如放到 `/opt/angel-devil-online`。
-
-2. 进入项目目录：
-
-```bash
-cd /opt/angel-devil-online
-```
-
-3. 启动服务：
-
-```bash
-PORT=8000 HOST=0.0.0.0 npm start
-```
-
-4. 在云服务器控制台或防火墙里放行 TCP `8000` 端口。
-
-5. 浏览器访问：
-
-```text
-http://服务器公网IP:8000
-```
-
-如果你有域名，可以把域名 A 记录解析到服务器公网 IP，然后访问：
-
-```text
-http://你的域名:8000
-```
-
-### 方式二：Docker 部署
-
-项目已经带了 `Dockerfile`。
-
-```bash
-docker build -t angel-devil-online .
-docker run -d --name angel-devil-online -p 8000:8000 angel-devil-online
-```
-
-然后访问：
-
-```text
-http://服务器公网IP:8000
-```
-
-### 常见问题
-
-- 朋友打不开：检查服务器安全组、防火墙是否放行 `8000`。
-- 页面能打开但房间消失：当前房间保存在内存里，服务器重启后会清空。
-- 想用 `https://你的域名`：可以在服务器前面加 Nginx 或 Caddy 做反向代理和 HTTPS。
-- 想长期稳定运行：建议用 Docker、systemd、pm2 其中一种守护进程方式。
 
 ## 玩法
 
@@ -132,14 +75,3 @@ http://服务器公网IP:8000
 - 天使禁止回到上一格
 
 说明：`41x41` 棋盘从中心到边界是 20 格，逃脱距离 `22` 表示天使需要突破边界外的绿色逃脱线才算获胜。
-
-## 后续联机部署思路
-
-当前代码把规则放在 `src/game.js`，界面放在 `src/app.js`。之后做网页联机时，可以复用同一套规则：
-
-- 浏览器端通过 WebSocket 发送 `placeBlock`、`moveAngel`、`undo` 等动作。
-- 服务器维护房间、玩家身份和权威游戏状态。
-- 每次动作在服务器校验后广播给房间内玩家。
-- 静态文件可以部署到 Nginx、Cloudflare Pages、Vercel 或任意 Node 静态服务。
-
-当前版本先使用 HTTP 轮询同步状态，不需要安装第三方依赖。后续如果玩家更多或想要更低延迟，可以把 `server.mjs` 的轮询 API 换成 WebSocket。
